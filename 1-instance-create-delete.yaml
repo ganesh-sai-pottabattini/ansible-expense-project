@@ -56,6 +56,15 @@
     - item.item == "lb"
     - operation == "create"
 
+  - name: Get EC2 info
+    amazon.aws.ec2_instance_info:
+      filters:
+      "tag:Name": "{{ item }}"
+    loop: "{{ instances }}"
+    register: ec2_info
+    when: operation == "delete"
+
+
   - name: Delete R53 records for database, backend, frontend and lb with private ip in expense project
     amazon.aws.route53:
       state: absent
@@ -65,7 +74,7 @@
       value: "{{ item.instances[0].private_ip_address }}"
       ttl: 1
       overwrite: true
-    loop: "{{ ec2_output.results }}"
+    loop: "{{ ec2_info.results }}"
     when: 
     - operation == "delete"
     - instances != "lb"
@@ -79,7 +88,7 @@
       value: "{{ item.instances[0].public_ip_address }}"
       ttl: 1
       overwrite: true
-    loop: "{{ ec2_output.results }}"
+    loop: "{{ ec2_info.results }}"
     when: 
     - item.item == "lb"
     - operation == "delete"
