@@ -59,7 +59,7 @@
   - name: Get EC2 info
     amazon.aws.ec2_instance_info:
       filters:
-      "tag:Name": "{{ item }}"
+        tag:Name: "{{ item }}"
     loop: "{{ instances }}"
     register: ec2_info
     when: operation == "delete"
