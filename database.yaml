@@ -12,4 +12,4 @@
         state: started
         enabled: yes
   - name: Setup root password
-      command: mysql_secure_installation --set-root-pass ExpenseApp@1
+    command: mysql_secure_installation --set-root-pass ExpenseApp@1
