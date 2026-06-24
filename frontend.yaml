@@ -7,16 +7,17 @@
     hostname:
       name: frontend.trivikram.online
 
+  - name: Install nginx
+    package:
+      name: nginx
+      state: present
+      
   - name: Start and enable nginx
     service:
       name: nginx
       state: started
       enabled: yes
 
-  - name: Install nginx
-    package:
-      name: nginx
-      state: present
   
   - name: Delete the Entire html directory
     file:
@@ -57,7 +58,7 @@
   - name: Print the nginx configuration output
     debug:
       msg: "{{ nginx_output.stdout }}"
-      
+
   - name: Start and Enable nginx
     service:
       name: nginx
