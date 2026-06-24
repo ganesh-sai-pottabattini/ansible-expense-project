@@ -1,0 +1,14 @@
+root_password: "{{ lookup('amazon.aws.aws_secret', 'roboshop/my_sql_root_password' , region='us-east-1') | from_json }}"
+
+ansible_user: ec2-user
+ansible_password: DevOps321
+BACKEND_HOST: backend.trivikram.online
+MONGODB_HOST: mongodb.trivikram.online
+REDIS_HOST: redis.trivikram.online
+MYSQL_HOST: mysql.trivikram.online 
+RABBITMQ_HOST: rabbitmq.trivikram.online 
+CATALOGUE_HOST: catalogue.trivikram.online
+USER_HOST: user.trivikram.online
+CART_HOST: cart.trivikram.online
+SHIPPING_HOST: shipping.trivikram.online
+PAYMENT_HOST: payment.trivikram.online

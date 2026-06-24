@@ -1,0 +1,87 @@
+- name: Configuring backend for expense
+  hosts: backend
+  become: true
+  tasks:
+  - name: Disabling NodeJs previous Version
+    dnf:
+      name: nodejs
+      state: removed
+
+  - name: Enabling NodeJs 20
+    command: dnf module enable nodejs:20 -y
+
+  - name: Installing NodeJs
+    dnf:
+      name: nodejs
+      state: present
+
+  - name: Verify NodeJs Version
+    command: node -v
+
+  - name: Delete the directory of it exists 
+    file:
+      path: /app
+      state: absent
+
+  - name: Delete the .zip file if it exists
+    file: 
+      path: /tmp/backend.gz
+      state: absent
+  
+  - name: create a new /app directory
+    file:
+      path: /app
+      state: directory
+  
+  - name: Add application User - system
+    user:
+      name: roboshop
+      home: /app
+      system: true
+      shell: /sbin/nologin
+      comment: roboshop system user for backend
+
+  - name: Download the backend application
+    get_url:
+      url: https://raw.githubusercontent.com/daws-90s/expense-documentation/refs/heads/main/artifacts/expense-backend-v3.tar.gz
+      dest: /tmp/backend.tar.gz
+    
+  - name: Extract the backend application
+    unarchive:
+      src: /tmp/backend.tar.gz
+      dest: /app
+      remote_src: yes
+
+  - name: Install the dependencies 
+    community.general.npm:
+      path: /app
+  
+  - name: Configure the systemd service for backend
+    template:
+      src: backend.service.j2
+      dest: /etc/systemd/system/backend.service
+
+  - name: Install mysql client
+    dnf:
+      name: mysql
+      state: present
+
+  - name: Load the schema for backend
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: "{{ MYSQL_HOST }}"
+      target: /app/schema/backend.sql
+    
+  - name: Reload the systemd
+    systemd_service:
+      name: shipping
+      daemon_reload: yes
+      
+  - name: Start and enable the backend service
+    systemd:
+      name: backend
+      state: started
+      enabled: yes

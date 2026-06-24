@@ -1,0 +1,85 @@
+- name: Instances creation for expense project
+  hosts: local
+  connection: local
+  vars:
+    image_id: ami-0220d79f3f480ecf5
+    instances: [ "mysql", "backend", "frontend" ]
+    route53_zone_name: trivikram.online
+    action: create
+  tasks:
+  - name: Create 3 instances for expense project
+    amazon.aws.ec2_instance:
+    name: "{{ item }}"
+    image_id: "{{ image_id }}"
+    instance_type: t3.micro
+    security_groups: 
+    - "{{ item }}"
+    - common
+    loop:
+    - "{{instances}}"
+    register: ec2_output
+    when: action == "create"
+
+  - name: Create R53 records for mysql database and backend in expense project
+    amazon.aws.route53:
+      state: present
+      zone: "{{ route53_zone_name }}"
+      record: "{{ item.item }}.{{ route53_zone_name }}"
+      type: A
+      value: "{{ item.instances[0].private_ip_address }}"
+      ttl: 1
+      overwrite: true
+    loop: "{{ ec2_output.results }}"
+    when: 
+    - action == "create"
+    - instances != "frontend"
+
+  - name : create R53 records for frontend in expense project
+    amazon.aws.route53:
+      state: present
+      zone: "{{ route53_zone_name }}"
+      record: "{{ route53_zone_name }}"
+      type: A
+      value: "{{ item.instances[0].public_ip_address }}"
+      ttl: 1
+      overwrite: true
+    loop: "{{ ec2_output.results }}"
+    when: 
+    - item.item == "frontend"
+    - action == "create"
+
+  - name: Delete R53 records for mysql database and backend in expense project
+    amazon.aws.route53:
+      state: absent
+      zone: "{{ route53_zone_name }}"
+      record: "{{ item.item }}.{{ route53_zone_name }}"
+      type: A
+      value: "{{ item.instances[0].private_ip_address }}"
+      ttl: 1
+      overwrite: true
+    loop: "{{ ec2_output.results }}"
+    when: 
+    - action == "delete"
+    - instances != "frontend"
+
+  - name: Delete R53 records for frontend in expense project
+    amazon.aws.route53:
+      state: absent
+      zone: "{{ route53_zone_name }}"
+      record: "{{ route53_zone_name }}"
+      type: A
+      value: "{{ item.instances[0].public_ip_address }}"
+      ttl: 1
+      overwrite: true
+    loop: "{{ ec2_output.results }}"
+    when: 
+    - item.item == "frontend"
+    - action == "delete"
+
+  - name: Delete EC2 instances for expense project
+    amazon.aws.ec2_instance:
+      state: absent
+      name: "{{ item }}"
+      wait: false
+    loop: "{{ instances }}"
+    when: action == "delete"
