@@ -1,7 +1,7 @@
 #!/bin/bash
 
 read -p "Access Key: " ACCESS_KEY
-read -s -p "Secret Key: " SECRET_KEY
+read -p "Secret Key: " SECRET_KEY
 echo
 
 aws configure set aws_access_key_id "$ACCESS_KEY"
@@ -32,10 +32,10 @@ ansible --version
 
 echo " ========= mk folder , chng ownershop and permissions ==================================================================================== "
 
-sudo mkdir /var/log/roboshop/ | tee
-sudo touch /var/log/roboshop/ansible.log | tee
-sudo chown -R ec2-user:ec2-user /var/log/roboshop/ansible.log | tee
-sudo chmod 777 -R /var/log/roboshop/ansible.log | tee
+sudo mkdir /var/log/roboshop/ | tee -a /dev/null
+sudo touch /var/log/roboshop/ansible.log | tee -a /dev/null
+sudo chown -R ec2-user:ec2-user /var/log/roboshop/ansible.log | tee -a /dev/null
+sudo chmod 777 -R /var/log/roboshop/ansible.log | tee -a /dev/null
 
 #read -p "Access Key: " ACCESS_KEY
 # read -s -p "Secret Key: " SECRET_KEY
