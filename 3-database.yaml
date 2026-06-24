@@ -2,14 +2,20 @@
   hosts: database
   become: true
   tasks:
+  - name: Change hostname to database
+    hostname:
+      name: database.trivikram.online
+
   - name: Install mysql
     dnf:
         name: mysql-server
         state: present
+
   - name: Start and enable mysql
     service:
         name: mysqld
         state: started
         enabled: yes
+        
   - name: Setup root password
     command: mysql_secure_installation --set-root-pass ExpenseApp@1

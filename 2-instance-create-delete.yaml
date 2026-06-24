@@ -3,11 +3,11 @@
   connection: local
   vars:
     ami_id: ami-0220d79f3f480ecf5
-    instances: [ "mysql", "backend", "frontend" ]
+    instances: [ "database", "backend", "frontend", "lb" ]
     route53_zone_name: trivikram.online
-    action: create
+    operation: create
   tasks:
-  - name: Create 3 instances for expense project
+  - name: Create 4 instances for expense project
     amazon.aws.ec2_instance:
       name: "{{ item }}"
       image_id: "{{ ami_id }}"
@@ -17,9 +17,16 @@
       - common
     loop: "{{ instances }}"
     register: ec2_output
-    when: action == "create"
+    when: operation == "create"
 
-  - name: Create R53 records for mysql database and backend in expense project
+  - name: Save instance details
+    copy:
+      content: "{{ item.instances | to_nice_yaml }}"
+      dest: "/tmp/{{ item.item }}.log"
+    loop: "{{ ec2_output.results }}"
+
+
+  - name: Create R53 records for database, backend and frontend in expense project
     amazon.aws.route53:
       state: present
       zone: "{{ route53_zone_name }}"
@@ -30,10 +37,10 @@
       overwrite: true
     loop: "{{ ec2_output.results }}"
     when: 
-    - action == "create"
-    - instances != "frontend"
+    - operation == "create"
+    - instances != "lb"
 
-  - name : create R53 records for frontend in expense project
+  - name : create R53 records for lb in expense project
     amazon.aws.route53:
       state: present
       zone: "{{ route53_zone_name }}"
@@ -44,10 +51,10 @@
       overwrite: true
     loop: "{{ ec2_output.results }}"
     when: 
-    - item.item == "frontend"
-    - action == "create"
+    - item.item == "lb"
+    - operation == "create"
 
-  - name: Delete R53 records for mysql database and backend in expense project
+  - name: Delete R53 records for  database, backend and frontend in expense project
     amazon.aws.route53:
       state: absent
       zone: "{{ route53_zone_name }}"
@@ -58,10 +65,10 @@
       overwrite: true
     loop: "{{ ec2_output.results }}"
     when: 
-    - action == "delete"
-    - instances != "frontend"
+    - operation == "delete"
+    - instances != "lb"
 
-  - name: Delete R53 records for frontend in expense project
+  - name: Delete R53 records for lb in expense project
     amazon.aws.route53:
       state: absent
       zone: "{{ route53_zone_name }}"
@@ -72,8 +79,8 @@
       overwrite: true
     loop: "{{ ec2_output.results }}"
     when: 
-    - item.item == "frontend"
-    - action == "delete"
+    - item.item == "lb"
+    - operation == "delete"
 
   - name: Delete EC2 instances for expense project
     amazon.aws.ec2_instance:
@@ -81,4 +88,4 @@
       name: "{{ item }}"
       wait: false
     loop: "{{ instances }}"
-    when: action == "delete"
+    when: operation == "delete"

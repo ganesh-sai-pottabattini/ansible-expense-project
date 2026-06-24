@@ -2,6 +2,10 @@
   hosts: backend
   become: true
   tasks:
+  - name: Change hostname to backend
+    hostname:
+      name: backend
+
   - name: Disabling NodeJs previous Version
     dnf:
       name: nodejs
@@ -17,6 +21,11 @@
 
   - name: Verify NodeJs Version
     command: node -v
+    register: nodejs_output
+
+  - name: Print the NodeJs Version
+    debug:
+      msg: "{{ nodejs_output.stdout }}"
 
   - name: Delete the directory of it exists 
     file:
@@ -61,11 +70,6 @@
       src: backend.service.j2
       dest: /etc/systemd/system/backend.service
 
-  - name: Install mysql client
-    dnf:
-      name: mysql
-      state: present
-
   - name: Install the mysql client
     pip:
       name: PyMySQL
@@ -82,7 +86,7 @@
     
   - name: Reload the systemd
     systemd_service:
-      name: shipping
+      name: backend
       daemon_reload: yes
 
   - name: Start and enable the backend service

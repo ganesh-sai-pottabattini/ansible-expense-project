@@ -1,0 +1,45 @@
+- name: Configuring the Load Balancer for expense project
+  hosts: lb
+  become: true
+  tasks:
+  - name: Change hostname to loadbalancer
+    hostname:
+      name: loadbalancer
+
+  - name: Install nginx
+    dnf:
+        name: nginx
+        state: present
+
+  - name: Remove the default nginx configuration file
+    file:
+      path: /etc/nginx/nginx.conf
+      state: absent
+
+  - name: Create a new nginx configuration file
+    template:
+      src: LB-nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+
+  - name: Test the nginx configuration
+    command: nginx -t
+    register: nginx_output
+
+  - name: Print the nginx configuration output
+    debug:
+      msg: "{{ nginx_output.stdout }}" 
+
+
+  - name: Start and enable nginx
+    service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  - name: Verify the nginx service status
+    command: systemctl status nginx
+    register: nginx_status
+
+  - name: Print the nginx service status
+    debug:
+      msg: "{{ nginx_status.stdout }}"
