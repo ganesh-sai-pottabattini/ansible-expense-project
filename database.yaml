@@ -4,12 +4,12 @@
   tasks:
   - name: Install mysql
     dnf:
-    name: mysql-server
-    state: present
+        name: mysql-server
+        state: present
   - name: Start and enable mysql
     service:
-    name: mysqld
-    state: started
-    enabled: yes
+        name: mysqld
+        state: started
+        enabled: yes
   - name: Setup root password
-    command: mysql_secure_installation --set-root-pass ExpenseApp@1
+      command: mysql_secure_installation --set-root-pass ExpenseApp@1
