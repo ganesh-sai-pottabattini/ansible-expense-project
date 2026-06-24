@@ -16,7 +16,7 @@
       - "{{ item }}"
       - common
       loop:
-      - "{{instances}}"
+      - "{{ instances }}"
       register: ec2_output
       when: action == "create"
 
