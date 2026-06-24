@@ -66,6 +66,11 @@
       name: mysql
       state: present
 
+  - name: Install the mysql client
+    pip:
+      name: PyMySQL
+      executable: pip3.9
+
   - name: Load the schema for backend
     community.mysql.mysql_db:
       state: import
@@ -79,7 +84,7 @@
     systemd_service:
       name: shipping
       daemon_reload: yes
-      
+
   - name: Start and enable the backend service
     systemd:
       name: backend
