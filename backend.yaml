@@ -35,11 +35,11 @@
   
   - name: Add application User - system
     user:
-      name: roboshop
+      name: expense
       home: /app
       system: true
       shell: /sbin/nologin
-      comment: roboshop system user for backend
+      comment: expense system user for backend
 
   - name: Download the backend application
     get_url:
