@@ -15,10 +15,10 @@
       security_groups: 
       - "{{ item }}"
       - common
-      loop:
-      - "{{ instances }}"
-      register: ec2_output
-      when: action == "create"
+    loop:
+    - "{{ instances }}"
+    register: ec2_output
+    when: action == "create"
 
   - name: Create R53 records for mysql database and backend in expense project
     amazon.aws.route53:
