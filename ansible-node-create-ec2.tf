@@ -16,7 +16,7 @@ data "aws_security_group" "sg" {
     for_each = toset(["ansible-control-node", "common"])
     filter {
         name   = "group-name"
-        values = ["each.value"]
+        values = [each.value]
     }
   
 }
@@ -25,9 +25,9 @@ resource "aws_instance" "ansible" {
     ami = "ami-0220d79f3f480ecf5"
     instance_type = "t3.micro"
     vpc_security_group_ids = [
-        data.aws_security_group.sg.ansible-control-node.id,
-        data.aws_security_group.sg.common.id
+        for sg in data.aws_security_group.sg : sg.id
         ]
+        
     tags = {
         Name = "Ansible Control Node"
         Project = "Expense"
