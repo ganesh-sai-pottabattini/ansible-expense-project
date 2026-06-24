@@ -2,7 +2,7 @@
   hosts: local
   connection: local
   vars:
-    image_id: ami-0220d79f3f480ecf5
+    ami_id: ami-0220d79f3f480ecf5
     instances: [ "mysql", "backend", "frontend" ]
     route53_zone_name: trivikram.online
     action: create
@@ -10,7 +10,7 @@
   - name: Create 3 instances for expense project
     amazon.aws.ec2_instance:
     name: "{{ item }}"
-    image_id: "{{ image_id }}"
+    image_id: "{{ ami_id }}"
     instance_type: t3.micro
     security_groups: 
     - "{{ item }}"

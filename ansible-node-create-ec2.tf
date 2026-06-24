@@ -25,7 +25,7 @@ resource "aws_instance" "ansible" {
     ami = "ami-0220d79f3f480ecf5"
     instance_type = "t3.micro"
     vpc_security_group_ids = [
-        for sg in data.aws_security_group.sg : sg.id
+        for sg in data.aws_security_group.sg : sg.id # for pakkana em isthe adhe id ki mundu raayali
         ]
         
     tags = {
