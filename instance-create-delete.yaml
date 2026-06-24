@@ -9,16 +9,16 @@
   tasks:
   - name: Create 3 instances for expense project
     amazon.aws.ec2_instance:
-    name: "{{ item }}"
-    image_id: "{{ ami_id }}"
-    instance_type: t3.micro
-    security_groups: 
-    - "{{ item }}"
-    - common
-    loop:
-    - "{{instances}}"
-    register: ec2_output
-    when: action == "create"
+      name: "{{ item }}"
+      image_id: "{{ ami_id }}"
+      instance_type: t3.micro
+      security_groups: 
+      - "{{ item }}"
+      - common
+      loop:
+      - "{{instances}}"
+      register: ec2_output
+      when: action == "create"
 
   - name: Create R53 records for mysql database and backend in expense project
     amazon.aws.route53:
