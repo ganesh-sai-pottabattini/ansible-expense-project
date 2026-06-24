@@ -49,7 +49,6 @@
     template:
       src: expense.config.j2
       dest: /etc/nginx/default.d/expense.conf
-      remote_src: yes
 
   - name: Test the nginx configuration
     command: nginx -t
