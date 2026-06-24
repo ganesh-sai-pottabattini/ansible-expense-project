@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=expense
-Environment=DB_HOST={{ MYSQL_HOST }}
+Environment=DB_HOST={{ DATABASE_HOST }}
 Environment=DB_USER=expense
 Environment=DB_PWD=ExpenseApp@1
 Environment=DB_DATABASE=transactions

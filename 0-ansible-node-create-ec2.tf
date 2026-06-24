@@ -27,6 +27,10 @@ resource "aws_instance" "ansible" {
     vpc_security_group_ids = [
         for sg in data.aws_security_group.sg : sg.id # for pakkana em isthe adhe id ki mundu raayali
         ]
+    user_data = <<-EOF
+        #!/bin/bash
+        dnf install ansible -y
+        EOF
         
     tags = {
         Name = "Ansible Control Node"

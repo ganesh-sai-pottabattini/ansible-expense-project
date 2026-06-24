@@ -4,7 +4,7 @@ ansible_user: ec2-user
 ansible_password: DevOps321
 LB_HOST: lb.trivikram.online
 BACKEND_HOST: backend.trivikram.online
-MONGODB_HOST: mongodb.trivikram.online
+DATABASE_HOST: mongodb.trivikram.online
 REDIS_HOST: redis.trivikram.online
 MYSQL_HOST: mysql.trivikram.online 
 RABBITMQ_HOST: rabbitmq.trivikram.online 

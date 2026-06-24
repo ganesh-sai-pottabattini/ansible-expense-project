@@ -26,7 +26,7 @@
     loop: "{{ ec2_output.results }}"
 
 
-  - name: Create R53 records for database, backend and frontend in expense project
+  - name: Create R53 records for database, backend, frontend and lb with private ip in expense project
     amazon.aws.route53:
       state: present
       zone: "{{ route53_zone_name }}"
@@ -40,7 +40,7 @@
     - operation == "create"
     - instances != "lb"
 
-  - name : create R53 records for lb in expense project
+  - name : Overwrite R53 records for lb with public ip in expense project
     amazon.aws.route53:
       state: present
       zone: "{{ route53_zone_name }}"
@@ -54,7 +54,7 @@
     - item.item == "lb"
     - operation == "create"
 
-  - name: Delete R53 records for  database, backend and frontend in expense project
+  - name: Delete R53 records for database, backend, frontend and lb with private ip in expense project
     amazon.aws.route53:
       state: absent
       zone: "{{ route53_zone_name }}"
@@ -68,7 +68,7 @@
     - operation == "delete"
     - instances != "lb"
 
-  - name: Delete R53 records for lb in expense project
+  - name: Delete R53 records for lb with overwritten public ip in expense project
     amazon.aws.route53:
       state: absent
       zone: "{{ route53_zone_name }}"
