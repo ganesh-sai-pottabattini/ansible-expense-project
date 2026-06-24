@@ -58,9 +58,9 @@
 
   - name: Get EC2 info
     amazon.aws.ec2_instance_info:
-    filters:
-      tag:Name: "{{ item }}"
-      instance-state-name: running
+      filters:
+        tag:Name: "{{ item }}"
+        instance-state-name: running
     loop: "{{ instances }}"
     register: ec2_info
     when: operation == "delete"
