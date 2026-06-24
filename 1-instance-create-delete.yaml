@@ -24,6 +24,7 @@
       content: "{{ item.instances | to_nice_yaml }}"
       dest: "/tmp/{{ item.item }}.log"
     loop: "{{ ec2_output.results }}"
+    ignore_errors: true
 
 
   - name: Create R53 records for database, backend, frontend and lb with private ip in expense project
