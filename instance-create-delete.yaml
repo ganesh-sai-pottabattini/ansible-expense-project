@@ -15,8 +15,7 @@
       security_groups: 
       - "{{ item }}"
       - common
-    loop:
-    - "{{ instances }}"
+    loop: "{{ instances }}"
     register: ec2_output
     when: action == "create"
 
