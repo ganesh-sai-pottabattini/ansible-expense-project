@@ -58,15 +58,11 @@
 
   - name: Get EC2 info
     amazon.aws.ec2_instance_info:
-      filters:
-        tag:Name: "{{ item }}"
+    filters:
+      tag:Name: "{{ item }}"
+      instance-state-name: running
     loop: "{{ instances }}"
     register: ec2_info
-    when: operation == "delete"
-
-  - name: Show first result
-    debug:
-      msg: "{{ ec2_info.results }}"
     when: operation == "delete"
 
   - name: Delete R53 records for database, backend, frontend and lb with private ip in expense project
