@@ -47,7 +47,7 @@
 
   - name: Create the expense.conf file
     template:
-      src: expense.conf.j2
+      src: expense.config.j2
       dest: /etc/nginx/default.d/expense.conf
       remote_src: yes
 
