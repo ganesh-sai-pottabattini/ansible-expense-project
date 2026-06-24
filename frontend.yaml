@@ -11,7 +11,7 @@
     package:
       name: nginx
       state: present
-      
+
   - name: Start and enable nginx
     service:
       name: nginx
@@ -49,6 +49,7 @@
     template:
       src: expense.conf.j2
       dest: /etc/nginx/default.d/expense.conf
+      remote_src: yes
 
   - name: Test the nginx configuration
     command: nginx -t
