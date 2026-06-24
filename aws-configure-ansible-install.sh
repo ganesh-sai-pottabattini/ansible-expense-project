@@ -32,7 +32,7 @@ ansible --version
 
 echo " ========= mk folder , chng ownershop and permissions ==================================================================================== "
 
-sudo touch file.txt
+touch file.txt
 sudo mkdir /var/log/roboshop/ | tee -a file.txt
 sudo touch /var/log/roboshop/ansible.log | tee -a file.txt
 sudo chown ec2-user:ec2-user /var/log/roboshop/ansible.log | tee -a file.txt
