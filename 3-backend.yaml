@@ -81,7 +81,7 @@
       name: all
       login_user: root
       login_password: ExpenseApp@1
-      login_host: "{{ MYSQL_HOST }}"
+      login_host: "{{ DATABASE_HOST }}"
       target: /app/schema/backend.sql
     
   - name: Reload the systemd
